@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ProxyFallbackAPI.Models; // Usando a classe ProxyRequest centralizada
 using System.Net.Http;
 
 namespace ProxyFallbackAPI.Controllers
@@ -12,12 +13,6 @@ namespace ProxyFallbackAPI.Controllers
         public ProxyController(HttpClient httpClient)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-        }
-
-        // Modelo para o payload
-        public class ProxyRequest
-        {
-            public string Cep { get; set; } = string.Empty;
         }
 
         // Endpoint principal do proxy
