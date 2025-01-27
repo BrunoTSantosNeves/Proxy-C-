@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-using ProxyFallbackAPI.Controllers; //  usar o namespace correto
+using ProxyFallbackAPI.Controllers; // Namespace correto
 using ProxyFallbackAPI.Models;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
-using RichardSzalay.MockHttp;
+using RichardSzalay.MockHttp; // Mock HTTP
+using Newtonsoft.Json; // Adicionado para deserialização de JSON
+using System.Collections.Generic; // Para usar Dictionary
 
 namespace ProxyFallbackAPI.Tests.UnitTests
 {
@@ -49,7 +51,11 @@ namespace ProxyFallbackAPI.Tests.UnitTests
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
             Assert.NotNull(okResult.Value);
-            Assert.Contains("\"logradouro\":\"Praça da Sé\"", okResult.Value.ToString());
+            
+            // Deserializar e verificar
+            var responseJson = JsonConvert.DeserializeObject<Dictionary<string, string>>(okResult.Value.ToString());
+            Assert.NotNull(responseJson);
+            Assert.Equal("Praça da Sé", responseJson["logradouro"]);
         }
     }
 }
