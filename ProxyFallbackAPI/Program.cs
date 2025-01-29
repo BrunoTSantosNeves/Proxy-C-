@@ -1,11 +1,41 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Adicionar serviços ao contêiner
-builder.Services.AddControllers(); // Habilita Controllers
-builder.Services.AddEndpointsApiExplorer(); // Necessário para expor endpoints no Swagger
-builder.Services.AddSwaggerGen(); // Configura o Swagger para documentação da API
-builder.Services.AddHttpClient();
+// Adicionar configurações de JWT ao serviço de configuração
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 
+// Configurar autenticação com JWT
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]))
+    };
+});
+
+// Adicionar autorização
+builder.Services.AddAuthorization();
+
+// Outros serviços (como controllers e HTTP client)
+builder.Services.AddControllers();
+builder.Services.AddHttpClient();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -23,37 +53,13 @@ if (app.Environment.IsDevelopment())
 // Middlewares padrão
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseAuthorization();
-
-app.MapGet("/", () => "Bem-vindo à API ProxyFallback! Acesse /swagger para a documentação.");
+app.UseAuthentication(); // Middleware de autenticação
+app.UseAuthorization();  // Middleware de autorização
 
 // Mapear controladores automaticamente
 app.MapControllers();
 
-// Rota de exemplo (Weather Forecast)
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+// Rota de exemplo (opcional)
+app.MapGet("/", () => "Bem-vindo à API ProxyFallback! Acesse /swagger para a documentação.");
 
 app.Run();
-
-// Registro de exemplo para retorno de dados
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
