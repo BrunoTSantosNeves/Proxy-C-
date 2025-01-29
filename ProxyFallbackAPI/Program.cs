@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Adicionar configurações de JWT ao serviço de configuração
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 // Configurar autenticação com JWT
 builder.Services.AddAuthentication(options =>
