@@ -22,8 +22,8 @@ namespace ProxyFallbackAPI.Controllers.Security
         /// <summary>
         /// Endpoint para autenticação e geração de token JWT.
         /// </summary>
-        /// userName = Nome do usuario
-        /// passWord = Senha do usuario
+        /// param name = Nome do usuario
+        /// param name = Senha do usuario
         /// <returns>Retorna um token JWT se a autenticação for bem-sucedida.</returns>
         
         [AllowAnonymous]
