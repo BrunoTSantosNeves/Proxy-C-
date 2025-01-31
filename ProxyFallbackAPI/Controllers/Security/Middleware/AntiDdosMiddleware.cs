@@ -1,9 +1,12 @@
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http; // Fornece acesso ao contexto Http para manipular requisições e resposta
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Net; //Permite trabalhar com endereços IPs
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Threading.Tasks; // Permite que o Middleware seja assincrono
+using System.Collections.Concurrent; //Importa o ConcurrentDictionary usado para armazenar e gerenciar os Ips que fazem requisições
+
 
 namespace ProxyFallbackAPI.Security.Middleware
 {
