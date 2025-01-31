@@ -56,6 +56,8 @@ app.UseHttpsRedirection();
 app.UseRouting();
 app.UseAuthentication(); // Middleware de autenticação
 app.UseAuthorization();  // Middleware de autorização
+app.UseMiddleware<AuthenticationMiddleware>();
+
 
 // Mapear controladores automaticamente
 app.MapControllers();
