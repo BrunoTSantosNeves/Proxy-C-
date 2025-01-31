@@ -36,7 +36,7 @@ namespace ProxyFallbackAPI.Controllers.Security
             }
 
             var user = await _userService.ValidateUserAsync(username, password);
-            if (user == null)
+            if (!user)
             {
                 return Unauthorized("Usuário ou senha inválidos.");
             }
