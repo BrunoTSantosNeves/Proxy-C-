@@ -53,7 +53,7 @@ namespace ProxyFallbackAPI.Security.Middleware
             }
             else
             {
-                _logger.LogInformation("Cabeçalho de autorização ausente ou mal formatado.")
+                _logger.LogInformation("Cabeçalho de autorização ausente ou mal formatado.");
             }
 
             await _next(context); // Continua o pipeline se tudo estiver correto.

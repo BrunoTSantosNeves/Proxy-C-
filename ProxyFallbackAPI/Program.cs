@@ -7,6 +7,30 @@ var builder = WebApplication.CreateBuilder(args);
 // Adicionar configurações de JWT ao serviço de configuração
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IUserService, UserService>();
+var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+builder.Services.AddSingleton(jwtSettings);
+builder.Services.AddScoped<IUserService, UserService>();
+
+
+
+// Adiciona Rate Limiting
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+    {
+        var ipAddress = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+        return RateLimitPartition.GetFixedWindowLimiter(ipAddress, _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 100, // Máximo de 100 requisições
+            Window = TimeSpan.FromMinutes(1), // Em uma janela de 1 minuto
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+            QueueLimit = 10 // Se exceder o limite, 10 requisições podem aguardar na fila
+        });
+    });
+});
 
 // Configurar autenticação com JWT
 builder.Services.AddAuthentication(options =>

@@ -5,6 +5,8 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
+
+
 namespace ProxyFallbackAPI.Security.Services
 {
     public interface ITokenService
@@ -27,8 +29,8 @@ namespace ProxyFallbackAPI.Security.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userID),
                 new Claim(JwtRegistedClaimNames.Email, userEmail),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString());
-            }
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
 
             var key = new SymmetricSecutitykey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -39,8 +41,8 @@ namespace ProxyFallbackAPI.Security.Services
                 Expires = Datetime.UtcNow.AddMinutes(_jwtSettings.TokenExpirationMinutes),
                 Issuer = _jwtSettings.Issuer,
                 Audience = _jwtSettings.Audience,
-                SigningCredentials = credentials;
-            }
+                SigningCredentials = credentials,
+            };
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);

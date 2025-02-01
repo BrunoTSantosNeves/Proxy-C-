@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProxyFallbackAPI.Security.Services;
 using System;
-using System.Threading.Tasks
+using System.Threading.Tasks;
+
 
 namespace ProxyFallbackAPI.Controllers.Security
 {
