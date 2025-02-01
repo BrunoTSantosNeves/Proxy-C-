@@ -1,3 +1,6 @@
+using ProxyFallbackAPI.Security.Configurations;
+
+
 namespace ProxyFallbackAPI.Security.Configurations
 {
     public class JwtSettings

@@ -1,4 +1,4 @@
-namespace ProxyFallbackAPI.Services
+namespace ProxyFallbackAPI.Security.Services
 {
     public interface IUserService
     {

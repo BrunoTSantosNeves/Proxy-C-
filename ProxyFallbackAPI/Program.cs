@@ -84,6 +84,7 @@ app.UseMiddleware<AuthenticationMiddleware>();
 app.UseMiddleware<AntiDdosMiddleware>(); // Adiciona o Middleware Ant-DDos
 
 
+
 // Mapear controladores automaticamente
 app.MapControllers();
 
