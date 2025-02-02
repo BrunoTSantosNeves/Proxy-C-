@@ -38,8 +38,9 @@ namespace ProxyFallbackAPI.Security.Middleware
             if (_blockedIps.ContainsKey(ipAddress) && _blockedIps[ipAddress] > DateTime.UtcNow)
             {
                 _logger.LogWarning($"IP {ipAddress} bloqueado por DDoS.");
-                context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                await context.Response.WriteAsync("Acesso bloqueado devido a atividade suspeita.");
+                context.Response.StatusCode = StatusCodes.Status302Found;
+                context.Response.Headers["Location"] = "/bloqueado.html";
+                await context.Response.CompleteAsync();
                 return;
             }
 
