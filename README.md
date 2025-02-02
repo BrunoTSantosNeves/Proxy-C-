@@ -6,7 +6,7 @@ O **ProxyFallbackAPI** é uma aplicação que demonstra boas práticas de design
 A lógica de fallback está implementada no **ProxyController.cs**, que age como ponto de entrada para as requisições enviadas à API principal. Caso a API principal falhe, o controlador tenta uma API secundária configurada. Este comportamento garante que o sistema continue funcionando, mesmo em cenários de indisponibilidade parcial.
 
 # Estrutura de Arquivos do Projeto
-
+``````
 ProxyFallbackAPI
 ├── Controllers
 │   ├── AuthController.cs           # Gerencia autenticação, login e emissão de tokens JWT.
@@ -30,7 +30,7 @@ ProxyFallbackAPI
 ├── Program.cs                      # Ponto de entrada do aplicativo; configura serviços e middlewares.
 ├── ProxyFallbackAPI.csproj         # Arquivo de projeto do .NET.
 ├── README.md                       # Documentação do projeto.
-
+``````
 
 O controlador utiliza serviços definidos no arquivo **ITservices.cs** para gerenciar chamadas às APIs. Esse serviço abstrai a lógica de fallback, tornando o código do controlador mais limpo e fácil de manter.
 
